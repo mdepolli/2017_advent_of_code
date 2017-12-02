@@ -27,11 +27,11 @@ defmodule Day1a do
     |> String.split("", trim: true)
   end
 
-  defp to_tuples(data, index) when index < (length(data) - 1) do
-    {Enum.at(data, index), Enum.at(data, index + 1)}
+  defp to_tuples(data, index) do
+    {Enum.at(data, index), Enum.at(data, matching_index(length(data), index))}
   end
 
-  defp to_tuples(data, index) when index == (length(data) - 1) do
-    {Enum.at(data, index), Enum.at(data, 0)}
-  end
+  defp matching_index(size, index) when index < (size - 1), do: index + 1
+
+  defp matching_index(size, index) when index == (size - 1), do: 0
 end
