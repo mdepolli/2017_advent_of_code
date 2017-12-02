@@ -31,11 +31,7 @@ defmodule Day1b do
     {Enum.at(data, index), Enum.at(data, matching_index(length(data), index))}
   end
 
-  defp matching_index(size, index) when index < round(size / 2) do
-    index + round(size / 2)
-  end
+  defp matching_index(size, index) when index < round(size / 2), do: index + round(size / 2)
 
-  defp matching_index(size, index) when index >= round(size / 2) do
-    index - round(size / 2)
-  end
+  defp matching_index(size, index) when index >= round(size / 2), do: index - round(size / 2)
 end
