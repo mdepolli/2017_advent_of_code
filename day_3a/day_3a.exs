@@ -13,13 +13,13 @@ defmodule Day3a do
   end
   defp draw_spiral(max_square, square, prev_coords, spiral_size, direction) when square < max_square do
     new_coords = move(prev_coords, direction)
-    {next_direction, spiral_size} = next_direction(new_coords, direction, spiral_size)
-    draw_spiral(max_square, square + 1, new_coords, spiral_size, next_direction)
+    {next_direction, next_spiral_size} = next_direction_and_size(new_coords, direction, spiral_size)
+    draw_spiral(max_square, square + 1, new_coords, next_spiral_size, next_direction)
   end
-  defp draw_spiral(max_square, square, prev_coords, _spiral_size, direction) when square == max_square and max_square > 1 do
+  defp draw_spiral(max_square, square, prev_coords, _, direction) when square == max_square and max_square > 1 do
     move(prev_coords, direction)
   end
-  defp draw_spiral(max_square, square, prev_coords, _spiral_size, _direction) when square == max_square and max_square == 1 do
+  defp draw_spiral(max_square, square, prev_coords, _, _) when square == max_square and max_square == 1 do
     prev_coords
   end
 
@@ -32,33 +32,20 @@ defmodule Day3a do
     end
   end
 
-  defp next_direction({x, y}, direction, spiral_size = {max_x, max_y, min_x, min_y}) do
-    case direction do
-      :right ->
-        if x > max_x do
-          {:up, {max_x + 1, max_y, min_x, min_y}}
-        else
-          {:right, spiral_size}
-        end
-      :up ->
-        if y > max_y do
-          {:left, {max_x, max_y + 1, min_x, min_y}}
-        else
-          {:up, spiral_size}
-        end
-      :left ->
-        if x < min_x do
-          {:down, {max_x, max_y, min_x - 1, min_y}}
-        else
-          {:left, spiral_size}
-        end
-      :down ->
-        if y < min_y do
-          {:right, {max_x, max_y, min_x, min_y - 1}}
-        else
-          {:down, spiral_size}
-        end
-    end
+  defp next_direction_and_size({x, _}, direction, {max_x, max_y, min_x, min_y}) when direction == :right and x > max_x do
+    {:up, {max_x + 1, max_y, min_x, min_y}}
+  end
+  defp next_direction_and_size({_, y}, direction, {max_x, max_y, min_x, min_y}) when direction == :up and y > max_y do
+    {:left, {max_x, max_y + 1, min_x, min_y}}
+  end
+  defp next_direction_and_size({x, _}, direction, {max_x, max_y, min_x, min_y}) when direction == :left and x < min_x do
+    {:down, {max_x, max_y, min_x - 1, min_y}}
+  end
+  defp next_direction_and_size({_, y}, direction, {max_x, max_y, min_x, min_y}) when direction == :down and y < min_y do
+    {:right, {max_x, max_y, min_x, min_y - 1}}
+  end
+  defp next_direction_and_size(_, direction, spiral_size) do
+    {direction, spiral_size}
   end
 
   defp calculate_distance({x, y}) do
