@@ -1,11 +1,14 @@
 defmodule Day4a do
   def solve(data) do
-    data = data |> String.trim |> String.split("\n")
-
     data
+    |> treat_data()
     |> Stream.map(&String.split(&1))
     |> Stream.filter(&is_valid(&1))
     |> Enum.count
+  end
+
+  defp treat_data(str) do
+    str |> String.trim |> String.split("\n")
   end
 
   defp is_valid(list) do
